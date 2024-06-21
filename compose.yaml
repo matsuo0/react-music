@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  react-music:
+    build:
+      context: .
+      dockerfile: Dockerfile_Production
+    ports:
+      - "8080:80"
+    volumes:
+      - .:/app
+      - /app/node_modules
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+      - NODE_ENV=production
+   
