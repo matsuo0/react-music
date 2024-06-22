@@ -1,6 +1,7 @@
 import spotify, { getToken } from "./lib/spotify";
 import { SongList } from "./components/SongList";
 import { useEffect, useState, useRef } from "react";
+import { Player } from "./components/Player";
 
 export default function App() {
   const [isLoading, setIsLoading] = useState(false);
@@ -26,11 +27,26 @@ export default function App() {
   const handleSongSelected = async (song) => {
     setSelectedSong(song);
     audioRef.current.src = song.preview_url;
+    playSong();
+  };
+
+  const playSong = () => {
     audioRef.current.play();
     setIsPlay(true);
-    //const result = await spotify.getSong(song.id);
-    //setAudioRef(result.audio);
   };
+
+  const pauseSong = () => {
+    audioRef.current.pause();
+    setIsPlay(false);
+  };
+
+  const toggleSong = () => {
+    if (isPlay){
+      pauseSong();
+    } else {
+      playSong();
+    }
+  }
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-900 text-white">
@@ -43,6 +59,7 @@ export default function App() {
           <SongList isLoading={isLoading} songs={popularSongs} onSongSelected={handleSongSelected}/>
         </section>
       </main>
+      {selectedSong != null && <Player song={selectedSong} isPlay={isPlay} onButtonClick={toggleSong}/>}
       <audio ref={audioRef} />
     </div>
   );
