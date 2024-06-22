@@ -4,13 +4,14 @@ services:
   react-music:
     build:
       context: .
-      dockerfile: Dockerfile_Production
+      # dockerfile: Dockerfile_Production
+      dockerfile: Dockerfile_Deployment
     ports:
-      - "8080:80"
+      - "8080:3000"
     volumes:
       - .:/app
-      - /app/node_modules
+      - /app/node_modules:/app/node_modules
     environment:
       - CHOKIDAR_USEPOLLING=true
-      - NODE_ENV=production
-   
+      - NODE_ENV=development
+      # - NODE_OPTIONS=--openssl-legacy-provider

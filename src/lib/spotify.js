@@ -2,6 +2,12 @@ import axios from "axios";
 
 class SpotifyClient {
   static async initialize() {
+    const client = new SpotifyClient();
+    await client.authenticate();
+    return client;
+  }
+
+  async authenticate() {
     const params = new URLSearchParams();
     params.append("grant_type", "client_credentials");
     params.append("client_id", process.env.REACT_APP_SPOTIFY_CLIENT_ID);
@@ -15,27 +21,26 @@ class SpotifyClient {
         },
       },
     ); 
-    let spotify = new SpotifyClient();
-    spotify.token = response.data.access_token;
-    return spotify;
+    this.token = response.data.access_token;
   }
 
   async getPopularSongs() {
     const response = await axios.get(
       "https://api.spotify.com/v1/playlists/7Bh83B3fWMqtdIK67Ld8em/tracks",
       {
-        // headers: {
-        //   "Authorization": `Bearer ${this.token}`,
-        // },
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${this.token}`,
+          "Authorization": `Bearer ${this.token}`
         },
       }
     );
-    console.log(response.data)
+    return response.data;
   }
 }
 
-const spotify = await SpotifyClient.initialize();
+let spotify;
+(async () => {
+  spotify = await SpotifyClient.initialize();
+})();
+
 export default spotify;
