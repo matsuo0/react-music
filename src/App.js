@@ -4,7 +4,10 @@ import { useEffect, useState, useRef } from "react";
 import { Player } from "./components/Player";
 import React from "react";
 import { SearchInput } from "./components/SearchInput";
+import { Pagination } from "./components/Pagination";
 
+
+const limit = 20;
 export default function App() {
   const [isLoading, setIsLoading] = useState(false);
   const [popularSongs, setPopularSongs] = useState([]);
@@ -13,6 +16,9 @@ export default function App() {
   const audioRef = useRef(null)
   const [keyword, setKeyword] = useState('');
   const [searchedSongs, setSearchedSongs] = useState();
+  const [page, setPage] = useState(1);
+  const [hasNext, setHasNext] = useState(false);
+  const [hasPrev, setHasPrev] = useState(false);
   const isSearchedResult = searchedSongs != null;
 
   useEffect(() => {
@@ -61,12 +67,27 @@ export default function App() {
     setKeyword(e.target.value);
   };
 
-  const searchSongs = async () => {
+  const searchSongs = async (page) => {
     setIsLoading(true);
-    const result = await spotify.searchSongs(keyword);
+    const offset = parseInt(page) ? (parseInt(page) - 1) * limit : 0;
+    const result = await spotify.searchSongs(keyword, limit, offset);
+    setHasNext(result.next != null);
+    setHasPrev(result.previous != null);    
     setSearchedSongs(result.items);
     setIsLoading(false);
   };
+
+  const moveToNext = async() => {
+    const nextPage = page + 1;    
+    await searchSongs(nextPage);
+    setPage(nextPage);
+  }
+
+  const moveToPrev = async() => {
+    const prevPage = page - 1;
+    await searchSongs(prevPage);
+    setPage(prevPage);
+  }
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-900 text-white">
@@ -82,6 +103,7 @@ export default function App() {
             songs={isSearchedResult ? searchedSongs : popularSongs}
             onSongSelected={handleSongSelected}
           />
+          {isSearchedResult && <Pagination onPrev={hasPrev ? moveToPrev : null} onNext={hasNext ? moveToNext : null}/>}
         </section>
       </main>
       {selectedSong != null && <Player song={selectedSong} isPlay={isPlay} onButtonClick={toggleSong}/>}
