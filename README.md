@@ -2,6 +2,16 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+
+## このRepositoryについて
+UdemyのReactコースのレビューを参考に作成したRepositoryです。
+SpotifyのAPIを利用し、曲の表示、再生、停止、検索を行うアプリです。
+
+.envファイルに下記パラメータを設定してください。
+SpotiryのAPIを利用するために必要なパラメータです。（Spotifyから取得します）
+REACT_APP_SPOTIFY_CLIENT_ID=""
+REACT_APP_SPOTIFY_CLIENT_SECRET=""
+
 ## Available Scripts
 
 In the project directory, you can run:
