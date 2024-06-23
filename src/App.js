@@ -2,6 +2,7 @@ import spotify, { getToken } from "./lib/spotify";
 import { SongList } from "./components/SongList";
 import { useEffect, useState, useRef } from "react";
 import { Player } from "./components/Player";
+import React from "react";
 
 export default function App() {
   const [isLoading, setIsLoading] = useState(false);
@@ -56,7 +57,7 @@ export default function App() {
     <div className="flex flex-col min-h-screen bg-gray-900 text-white">
       <main className="flex-1 p-8 mb-20">
         <header className="flex justify-between items-center mb-10">
-          <h1 className="text-4xl font-bold">Music App1</h1>
+          <h1 className="text-4xl font-bold">Music App</h1>
         </header>
         <section>
           <h2 className="text-2xl font-semibold mb-5">Popular Songs</h2>

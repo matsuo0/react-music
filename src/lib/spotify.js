@@ -1,4 +1,5 @@
 import axios from "axios";
+// import React from "react";
 
 class SpotifyClient {
   static async initialize() {
@@ -39,3 +40,14 @@ class SpotifyClient {
 
 const spotify = await SpotifyClient.initialize();
 export default spotify;
+
+// let spotifyInstance;
+
+// const getSpotifyInstance = async () => {
+//   if (!spotifyInstance) {
+//     spotifyInstance = await SpotifyClient.initialize();
+//   }
+//   return spotifyInstance;
+// };
+
+// export default spotifyInstance;
