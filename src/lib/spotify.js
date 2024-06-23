@@ -36,18 +36,26 @@ class SpotifyClient {
     );
     return response.data;
   }
+
+  async searchSongs(keyword) {
+    const response = await axios.get(
+      `https://api.spotify.com/v1/search`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${this.token}`,
+        },
+        params: {
+          "q": keyword,
+          "type": "track"
+        }
+      }      
+    );
+    return response.data.tracks;
+  }
 }
+
+
 
 const spotify = await SpotifyClient.initialize();
 export default spotify;
-
-// let spotifyInstance;
-
-// const getSpotifyInstance = async () => {
-//   if (!spotifyInstance) {
-//     spotifyInstance = await SpotifyClient.initialize();
-//   }
-//   return spotifyInstance;
-// };
-
-// export default spotifyInstance;

@@ -3,6 +3,7 @@ import { SongList } from "./components/SongList";
 import { useEffect, useState, useRef } from "react";
 import { Player } from "./components/Player";
 import React from "react";
+import { SearchInput } from "./components/SearchInput";
 
 export default function App() {
   const [isLoading, setIsLoading] = useState(false);
@@ -10,6 +11,9 @@ export default function App() {
   const [isPlay, setIsPlay] = useState(false);
   const [selectedSong, setSelectedSong] = useState();
   const audioRef = useRef(null)
+  const [keyword, setKeyword] = useState('');
+  const [searchedSongs, setSearchedSongs] = useState();
+  const isSearchedResult = searchedSongs != null;
 
   useEffect(() => {
     fetchPopularSongs();
@@ -53,15 +57,31 @@ export default function App() {
     }
   }
 
+  const handleInputChange = (e) => {
+    setKeyword(e.target.value);
+  };
+
+  const searchSongs = async () => {
+    setIsLoading(true);
+    const result = await spotify.searchSongs(keyword);
+    setSearchedSongs(result.items);
+    setIsLoading(false);
+  };
+
   return (
     <div className="flex flex-col min-h-screen bg-gray-900 text-white">
       <main className="flex-1 p-8 mb-20">
         <header className="flex justify-between items-center mb-10">
           <h1 className="text-4xl font-bold">Music App</h1>
         </header>
+        <SearchInput onInputChange={handleInputChange} onSubmit={searchSongs}/>
         <section>
-          <h2 className="text-2xl font-semibold mb-5">Popular Songs</h2>
-          <SongList isLoading={isLoading} songs={popularSongs} onSongSelected={handleSongSelected}/>
+          <h2 className="text-2xl font-semibold mb-5">{isSearchedResult ? 'Searched Result' : 'Popular Songs'}</h2>
+          <SongList 
+            isLoading={isLoading} 
+            songs={isSearchedResult ? searchedSongs : popularSongs}
+            onSongSelected={handleSongSelected}
+          />
         </section>
       </main>
       {selectedSong != null && <Player song={selectedSong} isPlay={isPlay} onButtonClick={toggleSong}/>}
